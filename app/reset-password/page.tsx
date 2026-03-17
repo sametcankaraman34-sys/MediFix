@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Lock, ArrowLeft, CheckCircle, Eye, EyeOff } from 'lucide-react'
@@ -11,7 +11,7 @@ import Image from 'next/image'
 import iconImage from '@/assets/icon.png'
 import { supabaseClient } from '@/lib/supabase-client'
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const { showSuccess, showError } = useToast()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -25,8 +25,8 @@ export default function ResetPasswordPage() {
   const [isValidating, setIsValidating] = useState(true)
 
   useEffect(() => {
-    const hash = searchParams.get('hash')
-    const type = searchParams.get('type')
+    const hash = searchParams?.get('hash') ?? null
+    const type = searchParams?.get('type') ?? null
 
     if (!hash || type !== 'recovery') {
       showError('Geçersiz veya eksik şifre sıfırlama bağlantısı')
@@ -66,8 +66,8 @@ export default function ResetPasswordPage() {
     setIsLoading(true)
 
     try {
-      const hash = searchParams.get('hash')
-      const type = searchParams.get('type')
+      const hash = searchParams?.get('hash') ?? null
+      const type = searchParams?.get('type') ?? null
 
       if (!hash || type !== 'recovery') {
         showError('Geçersiz şifre sıfırlama bağlantısı')
@@ -310,5 +310,23 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-vh-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#f5f7fa', padding: '2rem 1rem' }}>
+          <div className="text-center">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Yükleniyor...</span>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <ResetPasswordContent />
+    </Suspense>
   )
 }
