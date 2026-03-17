@@ -4,6 +4,14 @@ import { addCorsHeaders, handleCorsOptions, withRateLimit } from '@/lib/middlewa
 import { logger } from '@/lib/logger'
 import { getAuthUser, isDemoUser, demoProfile } from '@/lib/auth-server'
 
+type UserMetadata = {
+  first_name?: string
+  last_name?: string
+  name?: string
+  role?: string
+  phone?: string
+}
+
 export async function OPTIONS(request: NextRequest) {
   return handleCorsOptions(request.headers.get('origin'))
 }
@@ -36,7 +44,7 @@ export async function GET(request: NextRequest) {
         .single()
 
       if (profileError && profileError.code === 'PGRST116') {
-        const userMetadata = user.user_metadata || {}
+        const userMetadata = (user.user_metadata || {}) as UserMetadata
         const { data: newProfile, error: createError } = await supabase
           .from('users')
           .insert({
