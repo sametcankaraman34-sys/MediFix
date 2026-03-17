@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@stripe/stripe-js": "^8.6.1",
+    "@supabase/supabase-js": "^2.99.2",
     "bootstrap": "^5.3.8",
     "clsx": "^2.1.1",
     "cookies-next": "^4.1.1",
