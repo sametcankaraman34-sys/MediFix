@@ -42,7 +42,7 @@ export function getAccessToken(request: NextRequest): string | undefined {
 }
 
 export async function getAuthUser(request: NextRequest): Promise<{
-  data: { user: typeof demoUser | null }
+  data: { user: any | null }
   error: Error | null
 }> {
   const token = getAccessToken(request)
